@@ -30,80 +30,83 @@ PROGRAM:
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-// Hill cipher key matrix and its inverse
-int keymat[3][3] = { { 1, 2, 1 }, { 2, 3, 2 }, { 2, 2, 1 } };
-int invkeymat[3][3] = { { -1, 0, 1 }, { 2, -1, 0 }, { -2, 2, -1 } };
-// Key array for mapping
-char key[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-// Encode function
-void encode(char a, char b, char c, char *ret) {
-    int x, y, z;
-    int posa = (int) a - 65;
-    int posb = (int) b - 65;
-    int posc = (int) c - 65;
-    x = posa * keymat[0][0] + posb * keymat[1][0] + posc * keymat[2][0];
-    y = posa * keymat[0][1] + posb * keymat[1][1] + posc * keymat[2][1];
-    z = posa * keymat[0][2] + posb * keymat[1][2] + posc * keymat[2][2];
-    ret[0] = key[x % 26];
-    ret[1] = key[y % 26];
-    ret[2] = key[z % 26];
-    ret[3] = '\0';
-}
-// Decode function
-void decode(char a, char b, char c, char *ret) {
-    int x, y, z;
-    int posa = (int) a - 65;
-    int posb = (int) b - 65;
-    int posc = (int) c - 65;
-    x = posa * invkeymat[0][0] + posb * invkeymat[1][0] + posc * invkeymat[2][0];
-    y = posa * invkeymat[0][1] + posb * invkeymat[1][1] + posc * invkeymat[2][1];
-    z = posa * invkeymat[0][2] + posb * invkeymat[1][2] + posc * invkeymat[2][2];
-    ret[0] = key[(x % 26 < 0) ? (26 + x % 26) : (x % 26)];
-    ret[1] = key[(y % 26 < 0) ? (26 + y % 26) : (y % 26)];
-    ret[2] = key[(z % 26 < 0) ? (26 + z % 26) : (z % 26)];
-    ret[3] = '\0';
-}
-int main() {
-    char msg[1000];
-    char enc[1000] = "";
-    char dec[1000] = "";
-    int n;
-    strcpy(msg, "amrutha");
-    printf("Simulation of Hill Cipher\n");
-    printf("Input message : %s\n", msg);
-    // Convert message to uppercase
-    for (int i = 0; i < strlen(msg); i++) {
-        msg[i] = toupper(msg[i]);
+
+#define SIZE 2  // Size of the key matrix (2x2 for simplicity)
+
+int keyMatrix[SIZE][SIZE];
+
+void toUpperCase(char *str) {
+    for (int i = 0; str[i]; i++) {
+        str[i] = toupper(str[i]);
     }
-    // Remove spaces (if needed)
-    n = strlen(msg) % 3;
-    // Append padding text 'X' if needed
-    if (n != 0) {
-        for (int i = 1; i <= (3 - n); i++) {
-            strcat(msg, "X");
+}
+
+void removeSpaces(char *str) {
+    int count = 0;
+    for (int i = 0; str[i]; i++) {
+        if (str[i] != ' ') {
+            str[count++] = str[i];
         }
     }
-    printf("Padded message : %s\n", msg);
-    // Encoding
-    for (int i = 0; i < strlen(msg); i += 3) {
-        char a = msg[i];
-        char b = msg[i + 1];
-        char c = msg[i + 2];
-        char ret[4];
-        encode(a, b, c, ret);
-        strcat(enc, ret);
+    str[count] = '\0';
+}
+
+void getKeyMatrix(char *key) {
+    int k = 0;
+    toUpperCase(key);
+    removeSpaces(key);
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            keyMatrix[i][j] = key[k++] - 'A';
+        }
     }
-    printf("Encoded message : %s\n", enc);
-    // Decoding
-    for (int i = 0; i < strlen(enc); i += 3) {
-        char a = enc[i];
-        char b = enc[i + 1];
-        char c = enc[i + 2];
-        char ret[4];
-        decode(a, b, c, ret);
-        strcat(dec, ret);
+}
+
+void encrypt(char *text, char *cipher) {
+    toUpperCase(text);
+    removeSpaces(text);
+    int len = strlen(text);
+    if (len % SIZE != 0) {
+        text[len++] = 'X';  // Padding if needed
+        text[len] = '\0';
     }
-    printf("Decoded message : %s\n", dec);
+    
+    for (int i = 0; i < len; i += SIZE) {
+        for (int row = 0; row < SIZE; row++) {
+            int sum = 0;
+            for (int col = 0; col < SIZE; col++) {
+                sum += keyMatrix[row][col] * (text[i + col] - 'A');
+            }
+            cipher[i + row] = (sum % 26) + 'A';
+        }
+    }
+    cipher[len] = '\0';
+}
+
+void printKeyMatrix() {
+    printf("Key Matrix:\n");
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            printf("%d ", keyMatrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    char key[SIZE * SIZE + 1], text[100], cipher[100];
+    
+    printf("Enter key (4 letters): ");
+    scanf("%s", key);
+    getKeyMatrix(key);
+    printKeyMatrix();
+    
+    printf("Enter plaintext: ");
+    scanf("%s", text);
+    
+    encrypt(text, cipher);
+    printf("Ciphertext: %s\n", cipher);
+    
     return 0;
 }
 ``` 
@@ -111,15 +114,15 @@ int main() {
 ## OUTPUT:
 
 Simulating Hill Cipher
-![Screenshot 2025-03-19 103632](https://github.com/user-attachments/assets/6c2a8f64-d79a-46eb-b08d-9fd5cd982e75)
+![image](https://github.com/user-attachments/assets/c9751676-3eee-4fbf-8bec-3023124dc566)
 
 
-Input Message : B.Sanjay Kumar
+Enter key (4 letters): sanjay
+Key Matrix:
+18 0 
+13 9 
+Enter plaintext: sanjay kumar.B
+Ciphertext: MAAQAI
 
-Padded Message : HARITHAXX
-
-Encrypted Message :  PWYIJBOLR
-
-Decrypted Message : HARITHAXX
 ## RESULT:
 The program is executed successfully
