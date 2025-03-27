@@ -118,10 +118,15 @@ Simulating Hill Cipher
 
 
 Enter key (4 letters): sanjay
+
 Key Matrix:
+
 18 0 
+
 13 9 
+
 Enter plaintext: sanjay kumar.B
+
 Ciphertext: MAAQAI
 
 ## RESULT:
