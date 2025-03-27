@@ -30,7 +30,7 @@ Implementation using C or pyhton code
 
 
 ## PROGRAM:
-
+```
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -76,7 +76,7 @@ int main() {
 
     return 0;
 }
-
+```
 ## OUTPUT:
 
 Simulating Caesar Cipher
@@ -136,7 +136,7 @@ To decrypt, use the INVERSE (opposite) of the last 3 rules, and the 1st as-is (d
 
 
 ## PROGRAM:
-
+```
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -292,7 +292,7 @@ printf("Cipher text: %s\n", str);
 
 return 0;
 }
-
+```
 
 ## OUTPUT:
 
@@ -340,7 +340,7 @@ The cipher can, be adapted to an alphabet with any number of letters. All arithm
 
 
 ## PROGRAM:
-
+```
 PROGRAM:
 #include <stdio.h>
 #include <string.h>
@@ -421,7 +421,7 @@ int main() {
     printf("Decoded message : %s\n", dec);
     return 0;
 }
-
+``` 
 
 ## OUTPUT:
 
@@ -467,7 +467,7 @@ The Vigenere cipher is a method of encrypting alphabetic text by using a series 
 
 
 ## PROGRAM:
-
+```
 PROGRAM:
 #include <stdio.h>
 #include <string.h>
@@ -518,7 +518,7 @@ int main() {
     printf("Decrypted Message: %s\n", message);
     return 0;
 }
-
+```
 ## OUTPUT:
 
 
@@ -566,7 +566,7 @@ ALGORITHM DESCRIPTION:
 In the rail fence cipher, the plaintext is written downwards and diagonally on successive "rails" of an imaginary fence, then moving up when we reach the bottom rail. When we reach the top rail, the message is written downwards again until the whole plaintext is written out. The message is then read off in rows.
 
 ## PROGRAM:
-
+```
 PROGRAM:
 #include <stdio.h>
 #include <string.h>
@@ -604,7 +604,7 @@ int main() {
     printf("\n");
     return 0;
 }
-
+```
 ## OUTPUT:
 
 
